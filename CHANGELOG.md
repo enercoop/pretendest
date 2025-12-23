@@ -1,3 +1,9 @@
+## Pretendest-0.6.0 (2025-10-07)
+
+- Add `impersonating_user?` helper
+- Add `user_impersonator` helper
+- Add `impersonator:` option
+
 ## 0.6.0 (2025-04-03)
 
 - Dropped support for Ruby < 3.2 and Rails < 7.1

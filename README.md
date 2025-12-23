@@ -174,11 +174,11 @@ This creates five methods:
 true_account
 impersonate_account
 stop_impersonating_account
-impersonating_account? # Pretender Plus addition
-account_impersonator   # Pretender Plus addition
+impersonating_account? # Pretendest addition
+account_impersonator   # Pretendest addition
 ```
 
-### Impersonating from another role (Pretender Plus addition)
+### Impersonating from another role (Pretendest addition)
 
 You can impersonate a role from another role. Consider for instance when Employees are allowed to impersonate Clients:
 
@@ -190,6 +190,25 @@ impersonates :client,
 In that case, when impersonating:
 - `true_client` returns `nil` (because there is no "true" client),
 - `client_impersonator` returns the `current_employee`. 
+
+For this to work, the class needs to provide both `current_client` and `current_employee` methods.
+
+If your code base is using Devise for authentication, you can simply configure Devise to allow either Clients or Employees to access authenticated pages:
+
+```ruby
+  # Allow authenticating as either:
+  # - a client (usual case)
+  # - an employee (when impersonating a client)
+  devise_group :allowee, contains: [:client, :employee]
+
+  before_action :authenticate_allowee!
+  before_action :reject_employee_without_impersonation!
+
+  # Only employees currently impersonating a client are allowed to get through.
+  def reject_employee_without_impersonation!
+    authenticate_client! unless impersonating_client?
+  end
+```
 
 ## History
 
